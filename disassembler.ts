@@ -8,11 +8,13 @@ function hex(data: number, size: number) {
 let index = 0
 
 while (index < bytes.length) {
-  const byte = bytes[index]
-  const instruction = instructions[byte]
+  const instruction = instructions[bytes[index]]
 
-  let data = '', assembly = ''
-  let byte_01 = '', byte_02 = ''
+  let byte_01 = ''
+  let byte_02 = ''
+
+  let data     = ''
+  let assembly = ''
 
   switch (instruction.length) {
     case 1:
