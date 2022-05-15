@@ -7,30 +7,33 @@ function hex(data: number, size: number) {
 
 let index = 0
 
-while (index < 0xFF) {
+while (index < bytes.length) {
   const byte = bytes[index]
   const instruction = instructions[byte]
 
   let data = '', assembly = ''
-
-  const byte_01 = hex(bytes[index + 1], 1)
-  const byte_02 = hex(bytes[index + 2], 1)
+  let byte_01 = '', byte_02 = ''
 
   switch (instruction.length) {
     case 1:
-      data = '     '
+      data = `     `
       assembly = instruction.mnemonic
       break
-
     case 2:
+      byte_01 = hex(bytes[index + 1], 1)
+
       data = `${byte_01}   `
+
       assembly = instruction.mnemonic
         .replace(',d8', ',#$' + byte_01)
         .replace(' d8', ' #$' + byte_01)
       break
-
     case 3:
+      byte_01 = hex(bytes[index + 1], 1)
+      byte_02 = hex(bytes[index + 2], 1)
+
       data = `${byte_01} ${byte_02}`
+
       assembly = instruction.mnemonic
         .replace(',d16', ',#$' + byte_02 + byte_01)
         .replace(' d16', ' #$' + byte_02 + byte_01)
