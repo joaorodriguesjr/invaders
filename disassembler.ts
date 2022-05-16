@@ -1,4 +1,4 @@
-import bytes from './INVADERS'
+import bytes from './rom/invaders'
 import instructions from './instructions'
 
 function hex(data: number, size: number) {
