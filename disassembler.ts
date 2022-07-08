@@ -10,8 +10,8 @@ let index = 0
 while (index < bytes.length) {
   const instruction = instructions[bytes[index]]
 
-  let byte_01 = ''
-  let byte_02 = ''
+  let byte2 = ''
+  let byte3 = ''
 
   let data     = ''
   let assembly = ''
@@ -22,25 +22,25 @@ while (index < bytes.length) {
       assembly = instruction.mnemonic
       break
     case 2:
-      byte_01 = hex(bytes[index + 1], 1)
+      byte2 = hex(bytes[index + 1], 1)
 
-      data = `${byte_01}   `
+      data = `${byte2}   `
 
       assembly = instruction.mnemonic
-        .replace(',d8', ',#$' + byte_01)
-        .replace(' d8', ' #$' + byte_01)
+        .replace(',d8', ',#$' + byte2)
+        .replace(' d8', ' #$' + byte2)
       break
     case 3:
-      byte_01 = hex(bytes[index + 1], 1)
-      byte_02 = hex(bytes[index + 2], 1)
+      byte2 = hex(bytes[index + 1], 1)
+      byte3 = hex(bytes[index + 2], 1)
 
-      data = `${byte_01} ${byte_02}`
+      data = `${byte2} ${byte3}`
 
       assembly = instruction.mnemonic
-        .replace(',d16', ',#$' + byte_02 + byte_01)
-        .replace(' d16', ' #$' + byte_02 + byte_01)
-        .replace(',a16', ',$'  + byte_02 + byte_01)
-        .replace(' a16', ' $'  + byte_02 + byte_01)
+        .replace(',d16', ',#$' + byte3 + byte2)
+        .replace(' d16', ' #$' + byte3 + byte2)
+        .replace(',a16', ',$'  + byte3 + byte2)
+        .replace(' a16', ' $'  + byte3 + byte2)
       break
   }
 
