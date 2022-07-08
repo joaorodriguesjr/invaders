@@ -155,3 +155,122 @@ function MVI_M_data(value: number) {
 function LXI_rp_data16(rp: number, value: number) {
   registers.writePair(rp, value)
 }
+
+class Memory {
+  private data: DataView
+
+  constructor(size: number) {
+    this.data = new DataView(new ArrayBuffer(size))
+  }
+
+  read(address: number): number {
+    return this.data.getUint8(address)
+  }
+
+  write(address: number, value: number): void {
+    this.data.setUint8(address, value)
+  }
+}
+
+class Registers {
+  private data: DataView
+
+  constructor(size: number) {
+    this.data = new DataView(new ArrayBuffer(size))
+  }
+
+  read(register: number): number {
+    return this.data.getUint8(register)
+  }
+
+  write(register: number, value: number): void {
+    this.data.setUint8(register, value)
+  }
+
+  readPair(pair: number): number {
+    return this.data.getUint16(pair * 2)
+  }
+
+  writePair(pair: number, value: number): void {
+    this.data.setUint16(pair * 2, value)
+  }
+}
+
+class Processor {
+  constructor(private registers: Registers, private memory: Memory) {}
+
+  static create(): Processor {
+    return new Processor(new Registers(0xF), new Memory(0xFFFF))
+  }
+
+  /**
+   * Move data from register to register
+   * - (r1) ← (r2)
+   * - The content of register r2 is moved to register r1
+   *
+   * @param r1 3-bit wide register identifier
+   * @param r2 3-bit wide register identifier
+   */
+  private MOV_r_r(r1: number, r2: number) {
+    this.registers.write(r1, this.registers.read(r2))
+  }
+
+  /**
+   * Move data from memory to register
+   * - (r) ← ((H) (L))
+   * - The content of the memory location, whose address is in registers H and L, is moved to register r
+   *
+   * @param r 3-bit wide register identifier
+   */
+  private MOV_r_M(r: number) {
+    this.registers.write(r, this.memory.read(this.registers.readPair(HL)))
+  }
+
+  /**
+   * Move data from register to memory
+   * - ((H) (L)) ← (r)
+   * - The content of register r is moved to the memory location, whose address is in registers H and L
+   *
+   * @param r 3-bit wide register identifier
+   */
+  private MOV_M_r(r: number) {
+    this.memory.write(this.registers.readPair(HL), this.registers.read(r))
+  }
+
+  /**
+   * Move immediate data to register
+   * - (r) ← (byte 2)
+   * - The content of byte 2 of the instruction is moved to register r
+   *
+   * @param r 3-bit wide register identifier
+   * @param value 8-bit wide value
+   */
+  private MVI_r_data(r: number, value: number) {
+    this.registers.write(r, value)
+  }
+
+  /**
+   * Move immediate data to memory
+   * - ((H) (L)) ← (byte 2)
+   * - The content of byte 2 of the instruction is moved to the memory location, whose address is in registers H and L
+   *
+   * @param value 8-bit wide value
+   */
+  private MVI_M_data(value: number) {
+    this.memory.write(this.registers.readPair(HL), value)
+  }
+
+  /**
+   * Load immediate data to register pair
+   * - (rh) ← (byte 3)
+   * - (rl) ← (byte 2)
+   * - Byte 3 of the instruction is moved into the hi-order register (rh) of the register pair rp
+   * - Byte 2 of the instruction is moved into the lo-order register (rl) of the register pair rp
+   *
+   * @param rp 2-bit wide register pair identifier
+   * @param value 16-bit wide value
+   */
+  private LXI_rp_data16(rp: number, value: number) {
+    this.registers.writePair(rp, value)
+  }
+}
