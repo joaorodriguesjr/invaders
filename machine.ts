@@ -93,7 +93,7 @@ const memory = {
  * @param r1 3-bit wide register identifier
  * @param r2 3-bit wide register identifier
  */
-function MOV_r1_r2(r1: number, r2: number) {
+function MOV_r_r(r1: number, r2: number) {
   registers.write(r1, registers.read(r2))
 }
 
