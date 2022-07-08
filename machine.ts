@@ -196,11 +196,118 @@ class Registers {
   }
 }
 
+class Instruction {
+  private cycle: number
+
+  constructor(public opcode: number, public cycles: number) {
+    this.cycle = 0
+  }
+
+  public count(): void {
+    if (! this.ready()) this.cycle++
+  }
+
+  public ready(): boolean {
+    return this.cycle === this.cycles
+  }
+}
+
 class Processor {
+  private instruction: Instruction
+
+  private PC: number = 0
+
   constructor(private registers: Registers, private memory: Memory) {}
 
-  static create(): Processor {
+  public static create(): Processor {
     return new Processor(new Registers(0xF), new Memory(0xFFFF))
+  }
+
+  public cycle() {
+    if (! this.instruction) {
+      this.instruction = this.fetch()
+    }
+  }
+
+  /**
+   * Register B
+   *
+   * @returns 8-bit wide value
+   */
+  public get B(): number {
+    return this.registers.read(B)
+  }
+
+  /**
+   * Register B
+   *
+   * @param value 8-bit wide value
+   */
+  public set B(value: number) {
+    this.registers.write(B, value)
+  }
+
+  /**
+   * Register C
+   *
+   * @returns 8-bit wide value
+   */
+  public get C(): number {
+    return this.registers.read(C)
+  }
+
+  /**
+   * Register C
+   *
+   * @param value 8-bit wide value
+   */
+  public set C(value: number) {
+    this.registers.write(C, value)
+  }
+
+  /**
+   * Register pair BC
+   *
+   * @returns 16-bit wide value
+   */
+  public get BC(): number {
+    return this.registers.readPair(BC)
+  }
+
+  private fetch(): Instruction {
+    throw new Error('Method not implemented.')
+  }
+
+  /**
+   * No operation
+   */
+  public NOP() { this.incrementPC() }
+
+  /**
+   * Load immediate data to register pair BC
+   * - (B) ← (byte 3)
+   * - (C) ← (byte 2)
+   * - Byte 3 of the instruction is moved into the hi-order register B of the register pair BC
+   * - Byte 2 of the instruction is moved into the lo-order register C of the register pair BC
+   */
+  public LXI_BC_data() {
+    this.B = this.memory.read(this.PC + 2)
+    this.C = this.memory.read(this.PC + 1)
+    this.incrementPC(3)
+  }
+
+  /**
+   * Store accumulator indirect
+   * - ((B) (C)) ← (A)
+   * - The content of register A is moved to the memory location, whose address is in register pair BC
+   */
+  public STAX_BC() {
+    this.memory.write(this.BC, this.registers.read(A))
+    this.incrementPC()
+  }
+
+  private incrementPC(factor: number = 1) {
+    this.PC += factor
   }
 
   /**
@@ -270,7 +377,7 @@ class Processor {
    * @param rp 2-bit wide register pair identifier
    * @param value 16-bit wide value
    */
-  private LXI_rp_data16(rp: number, value: number) {
+  private LXI_rp_data(rp: number, value: number) {
     this.registers.writePair(rp, value)
   }
 }
