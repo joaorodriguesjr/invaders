@@ -1,5 +1,6 @@
 import { Processor } from '../src/Processor'
 import { Memory } from '../src/Memory'
+import { repeat } from '../src/helpers'
 
 describe('Processor', () => {
   let memory: Memory
@@ -11,10 +12,7 @@ describe('Processor', () => {
   })
 
   it('Should increment program counter by 1 when a NOP is executed', () => {
-    processor.cycle()
-    processor.cycle()
-    processor.cycle()
-    processor.cycle()
+    repeat(() => processor.cycle(), 4)
     expect(processor.PC).toBe(1)
   })
 })
