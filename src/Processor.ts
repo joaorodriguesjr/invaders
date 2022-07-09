@@ -282,6 +282,14 @@ export class Processor {
   }
 
   /**
+   * Program counter
+   * @param value 16-bit wide value
+   */
+  public set PC(value: number) {
+    this.registers.writeWord(10, value)
+  }
+
+  /**
    * Byte 1 of the instruction pointed by the program counter
    *
    * @returns 8-bit wide value
@@ -306,14 +314,6 @@ export class Processor {
    */
   public get BYTE3(): number {
     return this.memory.readByte(this.PC + 2)
-  }
-
-  /**
-   * Program counter
-   * @param value 16-bit wide value
-   */
-  public set PC(value: number) {
-    this.registers.writeWord(10, value)
   }
 
   /**
