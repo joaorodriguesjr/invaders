@@ -1,7 +1,17 @@
 {
   "private": true,
   "devDependencies": {
+    "@types/jest": "^28.1.4",
+    "jest": "^28.1.2",
     "nodemon": "^2.0.16",
+    "ts-jest": "^28.0.5",
     "ts-node": "^10.7.0"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "jest": {
+    "preset": "ts-jest"
   }
 }
