@@ -1,160 +1,67 @@
 /**
- * The bit pattern designating the accumulator register A
+ * The index designating the accumulator register A
  */
-const A = 0b111
+const A = 6
 
 /**
- * The bit pattern designating the register B
+ * The index designating the flags register F
  */
-const B = 0b000
+const F = 7
 
 /**
- * The bit pattern designating the register C
+ * The index designating the register B
  */
-const C = 0b001
+const B = 0
 
 /**
- * The bit pattern designating the register D
+ * The index designating the register C
  */
-const D = 0b010
+const C = 1
 
 /**
- * The bit pattern designating the register E
+ * The index designating the register D
  */
-const E = 0b011
+const D = 2
 
 /**
- * The bit pattern designating the register H
+ * The index designating the register E
  */
-const H = 0b100
+const E = 3
 
 /**
- * The bit pattern designating the register L
+ * The index designating the register H
  */
-const L = 0b101
+const H = 4
 
 /**
- * The bit pattern designating the register pair B-C
+ * The index designating the register L
  */
-const BC = 0b00
+const L = 5
 
 /**
- * The bit pattern designating the register pair D-E
+ * The index designating the register pair BC
  */
-const DE = 0b01
+const BC = 0
 
 /**
- * The bit pattern designating the register pair H-L
+ * The index designating the register pair DE
  */
-const HL = 0b10
+const DE = 1
 
 /**
- * The bit pattern designating the stack pointer register
+ * The index designating the register pair HL
  */
-const SP = 0b11
-
-const registers = {
-  data: new DataView(new ArrayBuffer(0xF)),
-
-  read(register: number): number {
-    return registers.data.getUint8(register)
-  },
-
-  write(register: number, value: number): void {
-    registers.data.setUint8(register, value)
-  },
-
-  readPair(pair: number): number {
-    return registers.data.getUint16(pair * 2)
-  },
-
-  writePair(pair: number, value: number): void {
-    registers.data.setUint16(pair * 2, value)
-  },
-}
-
-const memory = {
-  data: new DataView(new ArrayBuffer(0xFFFF)),
-
-  read(address: number): number {
-    return memory.data.getUint8(address)
-  },
-
-  write(address: number, value: number): void {
-    memory.data.setUint8(address, value)
-  },
-}
+const HL = 2
 
 /**
- * Move data from register to register
- * - (r1) ← (r2)
- * - The content of register r2 is moved to register r1
- *
- * @param r1 3-bit wide register identifier
- * @param r2 3-bit wide register identifier
+ * The index designating the stack pointer register SP
  */
-function MOV_r_r(r1: number, r2: number) {
-  registers.write(r1, registers.read(r2))
-}
+const SP = 4
 
 /**
- * Move data from memory to register
- * - (r) ← ((H) (L))
- * - The content of the memory location, whose address is in registers H and L, is moved to register r
- *
- * @param r 3-bit wide register identifier
+ * The index designating the program counter register PC
  */
-function MOV_r_M(r: number) {
-  registers.write(r, memory.read(registers.readPair(HL)))
-}
-
-/**
- * Move data from register to memory
- * - ((H) (L)) ← (r)
- * - The content of register r is moved to the memory location, whose address is in registers H and L
- *
- * @param r 3-bit wide register identifier
- */
-function MOV_M_r(r: number) {
-  memory.write(registers.readPair(HL), registers.read(r))
-}
-
-/**
- * Move immediate data to register
- * - (r) ← (byte 2)
- * - The content of byte 2 of the instruction is moved to register r
- *
- * @param r 3-bit wide register identifier
- * @param value 8-bit wide value
- */
-function MVI_r_data(r: number, value: number) {
-  registers.write(r, value)
-}
-
-/**
- * Move immediate data to memory
- * - ((H) (L)) ← (byte 2)
- * - The content of byte 2 of the instruction is moved to the memory location, whose address is in registers H and L
- *
- * @param value 8-bit wide value
- */
-function MVI_M_data(value: number) {
-  memory.write(registers.readPair(HL), value)
-}
-
-/**
- * Load immediate data to register pair
- * - (rh) ← (byte 3)
- * - (rl) ← (byte 2)
- * - Byte 3 of the instruction is moved into the hi-order register (rh) of the register pair rp
- * - Byte 2 of the instruction is moved into the lo-order register (rl) of the register pair rp
- *
- * @param rp 2-bit wide register pair identifier
- * @param value 16-bit wide value
- */
-function LXI_rp_data16(rp: number, value: number) {
-  registers.writePair(rp, value)
-}
+const PC = 5
 
 class Memory {
   private data: DataView
@@ -163,70 +70,89 @@ class Memory {
     this.data = new DataView(new ArrayBuffer(size))
   }
 
-  read(address: number): number {
-    return this.data.getUint8(address)
+  readByte(offset: number): number {
+    return this.data.getUint8(offset)
   }
 
-  write(address: number, value: number): void {
-    this.data.setUint8(address, value)
-  }
-}
-
-class Registers {
-  private data: DataView
-
-  constructor(size: number) {
-    this.data = new DataView(new ArrayBuffer(size))
+  writeByte(offset: number, value: number): void {
+    this.data.setUint8(offset, value)
   }
 
-  read(register: number): number {
-    return this.data.getUint8(register)
+  readWord(offset: number): number {
+    return this.data.getUint16(offset * 2)
   }
 
-  write(register: number, value: number): void {
-    this.data.setUint8(register, value)
-  }
-
-  readPair(pair: number): number {
-    return this.data.getUint16(pair * 2)
-  }
-
-  writePair(pair: number, value: number): void {
-    this.data.setUint16(pair * 2, value)
+  writeWord(offset: number, value: number): void {
+    this.data.setUint16(offset * 2, value)
   }
 }
 
 class Instruction {
   private cycle: number
 
-  constructor(public opcode: number, public cycles: number) {
+  constructor(
+    public opcode: number, public length: number, public cycles: number,
+    public execute: (processor: Processor) => void
+  ) {
     this.cycle = 0
   }
 
-  public count(): void {
-    if (! this.ready()) this.cycle++
+  public registerCycle() {
+    if (! this.isReady()) this.cycle++
   }
 
-  public ready(): boolean {
+  public isReady(): boolean {
     return this.cycle === this.cycles
   }
 }
 
 class Processor {
-  private instruction: Instruction
+  private registers: Memory
 
-  private PC: number = 0
+  private instruction: Instruction | null = null
 
-  constructor(private registers: Registers, private memory: Memory) {}
-
-  public static create(): Processor {
-    return new Processor(new Registers(0xF), new Memory(0xFFFF))
+  constructor(private memory: Memory) {
+    this.registers = new Memory(12)
   }
 
-  public cycle() {
-    if (! this.instruction) {
-      this.instruction = this.fetch()
-    }
+  public static create(): Processor {
+    return new Processor(new Memory(0xFFFF))
+  }
+
+  /**
+   * Get program counter
+   *
+   * @returns 16-bit wide value
+   */
+  public get PC(): number {
+    return this.registers.readWord(PC)
+  }
+
+  /**
+   * Set program counter
+   *
+   * @param value 16-bit wide value
+   */
+  public set PC(value: number) {
+    this.registers.writeWord(PC, value)
+  }
+
+  /**
+   * Accumulator register
+   *
+   * @returns 8-bit wide value
+   */
+  public get A(): number {
+    return this.registers.readByte(A)
+  }
+
+  /**
+   * Accumulator register
+   *
+   * @param value 8-bit wide value
+   */
+  public set A(value: number) {
+    this.registers.writeByte(A, value)
   }
 
   /**
@@ -235,7 +161,7 @@ class Processor {
    * @returns 8-bit wide value
    */
   public get B(): number {
-    return this.registers.read(B)
+    return this.registers.readByte(B)
   }
 
   /**
@@ -244,7 +170,7 @@ class Processor {
    * @param value 8-bit wide value
    */
   public set B(value: number) {
-    this.registers.write(B, value)
+    this.registers.writeByte(B, value)
   }
 
   /**
@@ -253,7 +179,7 @@ class Processor {
    * @returns 8-bit wide value
    */
   public get C(): number {
-    return this.registers.read(C)
+    return this.registers.readByte(C)
   }
 
   /**
@@ -262,7 +188,7 @@ class Processor {
    * @param value 8-bit wide value
    */
   public set C(value: number) {
-    this.registers.write(C, value)
+    this.registers.writeByte(C, value)
   }
 
   /**
@@ -271,17 +197,64 @@ class Processor {
    * @returns 16-bit wide value
    */
   public get BC(): number {
-    return this.registers.readPair(BC)
+    return this.registers.readWord(BC)
   }
 
-  private fetch(): Instruction {
-    throw new Error('Method not implemented.')
+  /**
+   * Get byte 1 of the instruction pointed by the program counter
+   *
+   * @returns 8-bit wide value
+   */
+  private get BYTE1(): number {
+    return this.memory.readByte(this.PC)
+  }
+
+  /**
+   * Get byte 2 of the instruction pointed by the program counter
+   *
+   * @returns 8-bit wide value
+   */
+  private get BYTE2(): number {
+    return this.memory.readByte(this.PC + 1)
+  }
+
+  /**
+   * Get byte 3 of the instruction pointed by the program counter
+   *
+   * @returns 8-bit wide value
+   */
+  private get BYTE3(): number {
+    return this.memory.readByte(this.PC + 2)
+  }
+
+  public cycle() {
+    if (this.instruction === null) {
+      this.instruction = new Instruction(this.BYTE1, 1, 4, (processor: Processor) => processor.NOP())
+    }
+
+    if (! this.instruction.isReady()) {
+      return this.instruction.registerCycle()
+    }
+
+    this.instruction.execute(this)
+    this.instruction = null
+  }
+
+  /**
+   * Advance program counter to point the offset where the next instruction is located in memory
+   */
+  private advance() {
+    if (! this.instruction) {
+      return
+    }
+
+    this.PC = (this.PC + this.instruction.length)
   }
 
   /**
    * No operation
    */
-  public NOP() { this.incrementPC() }
+  public NOP() { this.advance() }
 
   /**
    * Load immediate data to register pair BC
@@ -291,9 +264,9 @@ class Processor {
    * - Byte 2 of the instruction is moved into the lo-order register C of the register pair BC
    */
   public LXI_BC_data() {
-    this.B = this.memory.read(this.PC + 2)
-    this.C = this.memory.read(this.PC + 1)
-    this.incrementPC(3)
+    this.B = this.BYTE3
+    this.C = this.BYTE2
+    this.advance()
   }
 
   /**
@@ -302,12 +275,8 @@ class Processor {
    * - The content of register A is moved to the memory location, whose address is in register pair BC
    */
   public STAX_BC() {
-    this.memory.write(this.BC, this.registers.read(A))
-    this.incrementPC()
-  }
-
-  private incrementPC(factor: number = 1) {
-    this.PC += factor
+    this.memory.writeByte(this.BC, this.A)
+    this.advance()
   }
 
   /**
@@ -319,7 +288,7 @@ class Processor {
    * @param r2 3-bit wide register identifier
    */
   private MOV_r_r(r1: number, r2: number) {
-    this.registers.write(r1, this.registers.read(r2))
+    this.registers.writeByte(r1, this.registers.readByte(r2))
   }
 
   /**
@@ -330,7 +299,7 @@ class Processor {
    * @param r 3-bit wide register identifier
    */
   private MOV_r_M(r: number) {
-    this.registers.write(r, this.memory.read(this.registers.readPair(HL)))
+    this.registers.writeByte(r, this.memory.readByte(this.registers.readWord(HL)))
   }
 
   /**
@@ -341,7 +310,7 @@ class Processor {
    * @param r 3-bit wide register identifier
    */
   private MOV_M_r(r: number) {
-    this.memory.write(this.registers.readPair(HL), this.registers.read(r))
+    this.memory.writeByte(this.registers.readWord(HL), this.registers.readByte(r))
   }
 
   /**
@@ -353,7 +322,7 @@ class Processor {
    * @param value 8-bit wide value
    */
   private MVI_r_data(r: number, value: number) {
-    this.registers.write(r, value)
+    this.registers.writeByte(r, value)
   }
 
   /**
@@ -364,7 +333,7 @@ class Processor {
    * @param value 8-bit wide value
    */
   private MVI_M_data(value: number) {
-    this.memory.write(this.registers.readPair(HL), value)
+    this.memory.writeByte(this.registers.readWord(HL), value)
   }
 
   /**
@@ -378,6 +347,6 @@ class Processor {
    * @param value 16-bit wide value
    */
   private LXI_rp_data(rp: number, value: number) {
-    this.registers.writePair(rp, value)
+    this.registers.writeWord(rp, value)
   }
 }
