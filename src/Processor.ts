@@ -25,11 +25,6 @@ export class Processor {
   }
 
   /**
-   * Executes no operation
-   */
-  public NOP() { this.advance() }
-
-  /**
    * Executes 1 machine cycle
    */
   public cycle() {
@@ -55,6 +50,11 @@ export class Processor {
 
     this.PC = (this.PC + this.instruction.length)
   }
+
+  /**
+   * Executes no operation
+   */
+  public NOP() { this.advance() }
 
   /**
    * General purpose register B
