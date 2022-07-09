@@ -1,8 +1,20 @@
 import { Processor } from './Processor'
 
+/**
+ * Holds instruction related information
+ */
 export class Instruction {
+
+  /**
+   * Last registered cycle number
+   */
   private cycle: number
 
+  /**
+   * @param length Number of bytes that this instruction will take
+   * @param cycles Number of cycles that this instruction will take
+   * @param execute Exceution callback
+   */
   constructor(
     public length: number, public cycles: number,
     public execute: (processor: Processor) => void
@@ -10,10 +22,14 @@ export class Instruction {
     this.cycle = 1
   }
 
-  public registerCycle() {
-    if (! this.isReady()) this.cycle++
-  }
+  /**
+   * Registers a cycle
+   */
+  public registerCycle() { this.cycle++ }
 
+  /**
+   * @returns True if this instruction is ready to be executed
+   */
   public isReady(): boolean {
     return this.cycle === this.cycles
   }
