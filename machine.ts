@@ -1,3 +1,5 @@
+import instructions from './instructions'
+
 /**
  * The index designating the accumulator register A
  */
@@ -106,7 +108,7 @@ class Instruction {
   }
 }
 
-class Processor {
+export class Processor {
   private registers: Memory
 
   private instruction: Instruction | null = null
@@ -117,6 +119,10 @@ class Processor {
 
   public static create(): Processor {
     return new Processor(new Memory(0xFFFF))
+  }
+
+  public load(bytes: number[]) {
+    bytes.forEach((byte, offset) => this.memory.writeByte(offset, byte))
   }
 
   /**
@@ -229,7 +235,8 @@ class Processor {
 
   public cycle() {
     if (this.instruction === null) {
-      this.instruction = new Instruction(this.BYTE1, 1, 4, (processor: Processor) => processor.NOP())
+      const { code, length, cycles, execute } = instructions[this.BYTE1]
+      this.instruction = new Instruction(code, length, cycles, execute)
     }
 
     if (! this.instruction.isReady()) {
@@ -348,5 +355,13 @@ class Processor {
    */
   private LXI_rp_data(rp: number, value: number) {
     this.registers.writeWord(rp, value)
+  }
+
+  public dump() {
+    console.log(`PC: ${this.PC}`)
+    console.log(`A: ${this.A}`)
+    console.log(`B: ${this.B}`)
+    console.log(`C: ${this.C}`)
+    console.log(`instruction: ${this.instruction}`)
   }
 }

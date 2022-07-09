@@ -1,4 +1,14 @@
+import { Processor } from './machine'
+
 export default [
+  { code: 0x00, length: 1, cycles: 4 , mnemonic: 'NOP'      , execute: (processor: Processor) => processor.NOP() },
+
+  { code: 0x01, length: 3, cycles: 10, mnemonic: 'LXI B,d16', execute: (processor: Processor) => processor.LXI_BC_data() },
+  { code: 0x02, length: 1, cycles: 7 , mnemonic: 'STAX B'   , execute: (processor: Processor) => processor.STAX_B() },
+  { code: 0x03, length: 1, cycles: 5 , mnemonic: 'INX B'    , execute: (processor: Processor) => processor.INX_B() },
+]
+
+const keep = [
   { code: 0x00, length: 1, mnemonic: 'NOP' },
 
   { code: 0x01, length: 3, mnemonic: 'LXI B,d16' },
