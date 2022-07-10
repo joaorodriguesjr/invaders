@@ -43,18 +43,14 @@ export class Processor {
   /**
    * Advance program counter to point where the next instruction will be in memory
    */
-  private advance() {
-    if (! this.instruction) {
-      return
-    }
-
-    this.PC = (this.PC + this.instruction.length)
+  private advance(offset: number) {
+    this.PC = this.PC + offset
   }
 
   /**
    * Executes no operation
    */
-  public NOP() { this.advance() }
+  public NOP() { this.advance(1) }
 
   /**
    * General purpose register B
