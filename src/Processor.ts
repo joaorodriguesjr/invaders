@@ -294,15 +294,6 @@ export class Processor {
    * @returns 8-bit wide value
    */
   public get OPCODE(): number {
-    return this.BYTE1
-  }
-
-  /**
-   * Byte 1 of the instruction pointed by the program counter
-   *
-   * @returns 8-bit wide value
-   */
-  private get BYTE1(): number {
     return this.memory.readByte(this.PC)
   }
 
