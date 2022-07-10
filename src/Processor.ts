@@ -1,5 +1,5 @@
 import { Instruction } from './Instruction'
-import { Mapper } from './Mapper'
+import { Decoder } from './Decoder'
 import { Memory } from './Memory'
 
 /**
@@ -25,11 +25,11 @@ export class Processor {
   }
 
   /**
-   * Executes 1 machine cycle
+   * Receives a clock period signal
    */
-  public cycle() {
+  public clock() {
     if (this.instruction === null) {
-      this.instruction = Mapper.map(this.BYTE1)
+      this.instruction = Decoder.decode(this.BYTE1)
     }
 
     if (! this.instruction.isReady()) {

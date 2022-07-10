@@ -12,7 +12,7 @@ describe('Processor', () => {
   })
 
   it('Should increment program counter by 1 when a NOP is executed', () => {
-    repeat(() => processor.cycle(), 4)
+    repeat(() => processor.clock(), 4)
     expect(processor.PC).toBe(1)
   })
 })
