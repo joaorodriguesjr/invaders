@@ -29,7 +29,7 @@ export class Processor {
    */
   public clock() {
     if (this.instruction === null) {
-      this.instruction = Decoder.decode(this.BYTE1)
+      this.instruction = Decoder.decode(this.OPCODE)
     }
 
     if (this.instruction.isReady()) {
