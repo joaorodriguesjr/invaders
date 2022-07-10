@@ -36,6 +36,10 @@ describe('Processor', () => {
     it('Should load register C with byte2 of the instruction', () => {
       expect(processor.C).toBe(0xFF)
     })
+
+    it('Should increment program counter by 3', () => {
+      expect(processor.PC).toBe(3)
+    })
   })
 
   describe('STAX BC', () => {
