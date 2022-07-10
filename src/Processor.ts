@@ -25,7 +25,7 @@ export class Processor {
   }
 
   /**
-   * Receives a clock period signal
+   * Processes a clock signal
    */
   public clock() {
     if (this.instruction === null) {
@@ -35,11 +35,9 @@ export class Processor {
     if (this.instruction.isReady()) {
       this.instruction.execute(this)
       this.instruction = null
-
-      return
+    } else {
+      this.instruction.countCycle()
     }
-
-    this.instruction.countCycle()
   }
 
   /**
