@@ -44,7 +44,7 @@ export class Processor {
    * Advances program counter to point where the next instruction will be in memory
    */
   private advance(offset: number) {
-    this.PC = this.PC + offset
+    this.PC += offset
   }
 
   /**
