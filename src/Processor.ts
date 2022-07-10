@@ -281,10 +281,20 @@ export class Processor {
 
   /**
    * Program counter
+   *
    * @param value 16-bit wide value
    */
   public set PC(value: number) {
     this.registers.writeWord(10, value)
+  }
+
+  /**
+   * Opcode of the next instruction pointed by the program counter
+   *
+   * @returns 8-bit wide value
+   */
+  public get OPCODE(): number {
+    return this.BYTE1
   }
 
   /**
