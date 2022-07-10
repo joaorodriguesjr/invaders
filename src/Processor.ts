@@ -292,7 +292,7 @@ export class Processor {
    *
    * @returns 8-bit wide value
    */
-  public get BYTE1(): number {
+  private get BYTE1(): number {
     return this.memory.readByte(this.PC)
   }
 
@@ -301,7 +301,7 @@ export class Processor {
    *
    * @returns 8-bit wide value
    */
-  public get BYTE2(): number {
+  private get BYTE2(): number {
     return this.memory.readByte(this.PC + 1)
   }
 
@@ -310,7 +310,7 @@ export class Processor {
    *
    * @returns 8-bit wide value
    */
-  public get BYTE3(): number {
+  private get BYTE3(): number {
     return this.memory.readByte(this.PC + 2)
   }
 
