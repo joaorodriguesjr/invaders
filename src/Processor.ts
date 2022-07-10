@@ -41,7 +41,7 @@ export class Processor {
   }
 
   /**
-   * Advance program counter to point where the next instruction will be in memory
+   * Advances program counter to point where the next instruction will be in memory
    */
   private advance(offset: number) {
     this.PC = this.PC + offset
@@ -53,7 +53,7 @@ export class Processor {
   public NOP() { this.advance(1) }
 
   /**
-   * Load register pair with immediate data
+   * Loads register pair with immediate data
    */
   public LXI_BC_data() {
     this.B = this.BYTE3
