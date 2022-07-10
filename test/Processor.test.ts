@@ -15,4 +15,21 @@ describe('Processor', () => {
     repeat(() => processor.clock(), 4)
     expect(processor.PC).toBe(1)
   })
+
+  describe('LXI BC,data', () => {
+    beforeEach(() => {
+      memory.writeByte(0x00, 0x01)
+      memory.writeByte(0x01, 0xFF)
+      memory.writeByte(0x02, 0xAA)
+      repeat(() => processor.clock(), 10)
+    })
+
+    it('Should load register B with byte3 of the instruction', () => {
+      expect(processor.B).toBe(0xAA)
+    })
+
+    it('Should load register C with byte2 of the instruction', () => {
+      expect(processor.C).toBe(0xFF)
+    })
+  })
 })

@@ -52,6 +52,12 @@ export class Processor {
    */
   public NOP() { this.advance(1) }
 
+  public LXI_BC_data() {
+    this.B = this.BYTE3
+    this.C = this.BYTE2
+    this.advance(3)
+  }
+
   /**
    * General purpose register B
    *
