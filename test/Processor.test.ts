@@ -16,9 +16,12 @@ describe('Processor', () => {
     expect(() => processor.clock()).toThrow('Not implemented instruction: 0xFF')
   })
 
-  it('Should increment program counter by 1 when a NOP is executed', () => {
-    repeat(() => processor.clock(), 4)
-    expect(processor.PC).toBe(1)
+  describe('NOP', () => {
+    beforeEach(() => repeat(() => processor.clock(), 4))
+
+    it('Should increment program counter by 1', () => {
+      expect(processor.PC).toBe(1)
+    })
   })
 
   describe('LXI BC,data', () => {
