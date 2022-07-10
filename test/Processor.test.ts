@@ -37,4 +37,22 @@ describe('Processor', () => {
       expect(processor.C).toBe(0xFF)
     })
   })
+
+  describe('STAX BC', () => {
+    beforeEach(() => {
+      memory.writeByte(0x00, 0x02)
+      processor.A = 0xFF
+      processor.B = 0xAA
+      processor.C = 0xBB
+      repeat(() => processor.clock(), 7)
+    })
+
+    it('Should store accumulator into memory', () => {
+      expect(memory.readByte(processor.BC)).toBe(processor.A)
+    })
+
+    it('Should increment program counter by 1', () => {
+      expect(processor.PC).toBe(1)
+    })
+  })
 })
