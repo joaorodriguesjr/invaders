@@ -11,6 +11,11 @@ describe('Processor', () => {
     processor = new Processor(memory)
   })
 
+  it('Should throw error if instruction is not implemented', () => {
+    memory.writeByte(0x00, 0xFF)
+    expect(() => processor.clock()).toThrow('Not implemented instruction: 0xFF')
+  })
+
   it('Should increment program counter by 1 when a NOP is executed', () => {
     repeat(() => processor.clock(), 4)
     expect(processor.PC).toBe(1)

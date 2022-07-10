@@ -1,5 +1,5 @@
 export function hex(value: number, size: number = 2): string {
-  return value.toString(16).padStart(size, '0')
+  return value.toString(16).padStart(size, '0').toUpperCase()
 }
 
 export function repeat(callback: (iteration: number) => void, count: number) {

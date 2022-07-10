@@ -3,14 +3,17 @@ import { Processor } from './Processor'
 import { hex } from './helpers'
 
 export class Decoder {
-  public static decode(byte: number): Instruction {
-    switch (byte) {
-      case 0x00:
-        return new Instruction(1, 4 , (processor: Processor) => processor.NOP())
-      case 0x01:
-        return new Instruction(3, 10, (processor: Processor) => processor.LXI_BC_data())
+  public static instructions = [
+    { length : 1, cycles : 4 , execute : (processor: Processor) => processor.NOP() },
+    { length : 3, cycles : 10, execute : (processor: Processor) => processor.LXI_BC_data() }
+  ]
+
+  public static decode(opcode: number): Instruction {
+    if (this.instructions[opcode] === undefined) {
+      throw new Error(`Not implemented instruction: 0x${hex(opcode)}`)
     }
 
-    throw new Error(`Not implemented instruction: 0x${hex(byte)}`)
+    const { length, cycles, execute } = this.instructions[opcode]
+    return new Instruction(length, cycles, execute)
   }
 }
