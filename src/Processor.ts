@@ -32,12 +32,14 @@ export class Processor {
       this.instruction = Decoder.decode(this.BYTE1)
     }
 
-    if (! this.instruction.isReady()) {
-      return this.instruction.countCycle()
+    if (this.instruction.isReady()) {
+      this.instruction.execute(this)
+      this.instruction = null
+
+      return
     }
 
-    this.instruction.execute(this)
-    this.instruction = null
+    this.instruction.countCycle()
   }
 
   /**
