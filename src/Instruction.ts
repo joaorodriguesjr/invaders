@@ -25,7 +25,7 @@ export class Instruction {
   /**
    * Registers a cycle
    */
-  public registerCycle() { this.cycle++ }
+  public countCycle() { this.cycle++ }
 
   /**
    * @returns True if this instruction is ready to be executed

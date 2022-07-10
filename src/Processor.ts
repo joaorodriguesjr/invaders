@@ -33,7 +33,7 @@ export class Processor {
     }
 
     if (! this.instruction.isReady()) {
-      return this.instruction.registerCycle()
+      return this.instruction.countCycle()
     }
 
     this.instruction.execute(this)
