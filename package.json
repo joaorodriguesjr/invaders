@@ -8,10 +8,13 @@
     "ts-node": "^10.7.0"
   },
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --coverage"
   },
   "jest": {
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "collectCoverage": true,
+    "coverageReporters": ["json", "lcov", "text", "clover"],
+    "rootDir": ".",
+    "roots": ["src", "test"]
   }
 }
