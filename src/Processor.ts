@@ -52,6 +52,9 @@ export class Processor {
    */
   public NOP() { this.advance(1) }
 
+  /**
+   * Load register pair with immediate data
+   */
   public LXI_BC_data() {
     this.B = this.BYTE3
     this.C = this.BYTE2
