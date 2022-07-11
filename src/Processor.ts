@@ -1,5 +1,4 @@
-import { Instruction } from './Instruction'
-import { Decoder } from './Decoder'
+import { Instruction, length, decode } from './Instruction'
 import { Memory } from './Memory'
 
 /**
@@ -30,9 +29,8 @@ export class Processor {
   public clock() {
     if (this.instruction === null) {
       this.fetchOpcode()
-      this.instruction = Decoder.decode(this.IR)
 
-      switch (this.instruction.length) {
+      switch (length(this.OPCODE)) {
         case 2:
           this.fetchByte2()
           break
@@ -41,6 +39,8 @@ export class Processor {
           this.fetchByte3()
           break
       }
+
+      this.instruction = decode(this.OPCODE)
     }
 
     if (this.instruction.ready) {
@@ -371,7 +371,7 @@ export class Processor {
    *
    * @returns 8-bit wide value
    */
-  public get IR(): number {
+  public get OPCODE(): number {
     return this.registers.readByte(14)
   }
 
@@ -380,7 +380,7 @@ export class Processor {
    *
    * @param value 8-bit wide value
    */
-  public set IR(value: number) {
+  public set OPCODE(value: number) {
     this.registers.writeByte(14, value)
   }
 
@@ -388,7 +388,7 @@ export class Processor {
    * Fetches the opcode pointed by the program counter
    */
   private fetchOpcode() {
-    this.IR = this.memory.readByte(this.PC)
+    this.OPCODE = this.memory.readByte(this.PC)
     this.PC += 1
   }
 

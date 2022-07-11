@@ -1,4 +1,5 @@
 import { Processor } from './Processor'
+import { hex } from './helpers'
 
 /**
  * Holds instruction related information
@@ -33,4 +34,43 @@ export class Instruction {
   public get ready(): boolean {
     return this.cycle === this.cycles
   }
+}
+
+/**
+ * Processor instruction set
+ */
+const instructions = [
+  { length : 1, cycles : 4 , execute : (processor: Processor) => processor.NOP() },
+  { length : 3, cycles : 10, execute : (processor: Processor) => processor.LXI_BC_data() },
+  { length : 1, cycles : 7 , execute : (processor: Processor) => processor.STAX_BC() },
+  { length : 1, cycles : 5 , execute : (processor: Processor) => processor.INX_BC() },
+]
+
+/**
+ * Evaluates an opcode and provides its correspondent instruction
+ *
+ * @param opcode 8-bit opcode
+ * @returns The instruction that corresponds to the opcode
+ */
+export function decode(opcode: number): Instruction {
+  if (instructions[opcode] === undefined) {
+    throw new Error(`Not implemented instruction: 0x${hex(opcode)}`)
+  }
+
+  const { length, cycles, execute } = instructions[opcode]
+  return new Instruction(length, cycles, execute)
+}
+
+/**
+ * Provides the length a instruction based on its opcode
+ *
+ * @param opcode 8-bit opcode
+ * @returns The length of the mapped instruction
+ */
+export function length(opcode: number): number {
+  if (instructions[opcode] === undefined) {
+    throw new Error(`Not implemented instruction: 0x${hex(opcode)}`)
+  }
+
+  return instructions[opcode].length
 }
