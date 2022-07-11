@@ -33,11 +33,11 @@ describe('Processor', () => {
     })
 
     it('Should load register B with byte3 of the instruction', () => {
-      expect(processor.B).toBe(0xAA)
+      expect(processor.B).toBe(memory.readByte(0x02))
     })
 
     it('Should load register C with byte2 of the instruction', () => {
-      expect(processor.C).toBe(0xFF)
+      expect(processor.C).toBe(memory.readByte(0x01))
     })
 
     it('Should increment program counter by 3', () => {

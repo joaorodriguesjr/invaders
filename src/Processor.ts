@@ -29,7 +29,18 @@ export class Processor {
    */
   public clock() {
     if (this.instruction === null) {
-      this.instruction = Decoder.decode(this.OPCODE)
+      this.fetchOpcode()
+      this.instruction = Decoder.decode(this.IR)
+
+      switch (this.instruction.length) {
+        case 2:
+          this.fetchByte2()
+          break
+        case 3:
+          this.fetchByte2()
+          this.fetchByte3()
+          break
+      }
     }
 
     if (this.instruction.ready) {
@@ -43,15 +54,14 @@ export class Processor {
   /**
    * Executes no operation
    */
-  public NOP() { this.PC += 1 }
+  public NOP() { }
 
   /**
    * Loads register pair with immediate data
    */
   public LXI_BC_data() {
-    this.B = this.BYTE3
-    this.C = this.BYTE2
-    this.PC += 3
+    this.B = this.W
+    this.C = this.Z
   }
 
   /**
@@ -59,7 +69,6 @@ export class Processor {
    */
   public STAX_BC() {
     this.memory.writeByte(this.BC, this.A)
-    this.PC += 1
   }
 
   /**
@@ -369,30 +378,27 @@ export class Processor {
   }
 
   /**
-   * Opcode of the next instruction pointed by the program counter
-   *
-   * @returns 8-bit wide value
+   * Fetches the opcode pointed by the program counter
    */
-  public get OPCODE(): number {
-    return this.memory.readByte(this.PC)
+  private fetchOpcode() {
+    this.IR = this.memory.readByte(this.PC)
+    this.PC += 1
   }
 
   /**
-   * Byte 2 of the instruction pointed by the program counter
-   *
-   * @returns 8-bit wide value
+   * Fetches the operand pointed by the program counter
    */
-  private get BYTE2(): number {
-    return this.memory.readByte(this.PC + 1)
+  private fetchByte2() {
+    this.Z = this.memory.readByte(this.PC)
+    this.PC += 1
   }
 
   /**
-   * Byte 3 of the instruction pointed by the program counter
-   *
-   * @returns 8-bit wide value
+   * Fetches the operand pointed by the program counter
    */
-  private get BYTE3(): number {
-    return this.memory.readByte(this.PC + 2)
+  private fetchByte3() {
+    this.W = this.memory.readByte(this.PC)
+    this.PC += 1
   }
 
   /**
