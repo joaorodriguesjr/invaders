@@ -47,15 +47,23 @@ const instructions = [
 ]
 
 /**
+ * Validates the instruction existence for a given opcode
+ *
+ * @param opcode 8-bit opcode
+ */
+function validate(opcode: number) {
+  if (instructions[opcode] === undefined)
+    throw new Error(`Not implemented instruction: 0x${hex(opcode)}`)
+}
+
+/**
  * Evaluates an opcode and provides its correspondent instruction
  *
  * @param opcode 8-bit opcode
  * @returns The instruction that corresponds to the opcode
  */
 export function decode(opcode: number): Instruction {
-  if (instructions[opcode] === undefined) {
-    throw new Error(`Not implemented instruction: 0x${hex(opcode)}`)
-  }
+  validate(opcode)
 
   const { length, cycles, execute } = instructions[opcode]
   return new Instruction(length, cycles, execute)
@@ -68,9 +76,6 @@ export function decode(opcode: number): Instruction {
  * @returns The length of the mapped instruction
  */
 export function length(opcode: number): number {
-  if (instructions[opcode] === undefined) {
-    throw new Error(`Not implemented instruction: 0x${hex(opcode)}`)
-  }
-
+  validate(opcode)
   return instructions[opcode].length
 }
