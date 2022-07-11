@@ -21,7 +21,7 @@ export class Processor {
    * @param memory Memory of 16-bit addressable space
    */
   public constructor(private memory: Memory) {
-    this.registers = new Memory(12)
+    this.registers = new Memory(0xF)
   }
 
   /**
@@ -294,6 +294,78 @@ export class Processor {
    */
   public set PC(value: number) {
     this.registers.writeWord(10, value)
+  }
+
+  /**
+   * Temporary register W
+   *
+   * @returns 8-bit wide value
+   */
+  public get W(): number {
+    return this.registers.readByte(12)
+  }
+
+  /**
+   * Temporary register W
+   *
+   * @param value 8-bit wide value
+   */
+  public set W(value: number) {
+    this.registers.writeByte(12, value)
+  }
+
+  /**
+   * Temporary register Z
+   *
+   * @returns 8-bit wide value
+   */
+  public get Z(): number {
+    return this.registers.readByte(13)
+  }
+
+  /**
+   * Temporary register Z
+   *
+   * @param value 8-bit wide value
+   */
+  public set Z(value: number) {
+    this.registers.writeByte(13, value)
+  }
+
+  /**
+   * Temporary register pair WZ
+   *
+   * @returns 16-bit wide value
+   */
+  public get WZ(): number {
+    return this.registers.readWord(12)
+  }
+
+  /**
+   * Temporary register pair WZ
+   *
+   * @param value 16-bit wide value
+   */
+  public set WZ(value: number) {
+    this.registers.writeWord(12, value)
+  }
+
+  /**
+   * Instruction register
+   *
+   * @returns 8-bit wide value
+   */
+  public get IR(): number {
+    return this.registers.readByte(14)
+  }
+
+  /**
+   * Instruction register
+   *
+   * @param value 8-bit wide value
+   */
+  public set IR(value: number) {
+    this.registers.writeByte(14, value)
   }
 
   /**
