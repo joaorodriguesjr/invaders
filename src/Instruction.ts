@@ -44,6 +44,7 @@ const instructions = [
   { length : 3, cycles : 10, execute : (processor: Processor) => processor.LXI_BC_data() },
   { length : 1, cycles : 7 , execute : (processor: Processor) => processor.STAX_BC() },
   { length : 1, cycles : 5 , execute : (processor: Processor) => processor.INX_BC() },
+  { length : 1, cycles : 5 , execute : (processor: Processor) => processor.INR_B() },
 ]
 
 /**

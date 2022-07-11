@@ -2,6 +2,20 @@ import { Instruction, length, decode } from './Instruction'
 import { Memory } from './Memory'
 
 /**
+ * Calculates the parity of a given value
+ */
+function parity(value: number): boolean {
+  let count = 0
+
+  while (value > 0) {
+    count += value & 1
+    value >>= 1
+  }
+
+  return count % 2 === 0
+}
+
+/**
  * Emulates Intel 8080 instructions
  */
 export class Processor {
@@ -76,6 +90,17 @@ export class Processor {
    */
   public INX_BC() {
     this.BC += 1
+  }
+
+  /**
+   * Increments register B
+   */
+  public INR_B() {
+    this.B += 1
+    this.ZF = (this.B === 0)
+    this.SF = (this.B & 0b10000000) === 0b10000000
+    this.PF = parity(this.B)
+    this.AC = false
   }
 
   /**
@@ -364,6 +389,96 @@ export class Processor {
    */
   public set WZ(value: number) {
     this.registers.writeWord(12, value)
+  }
+
+  /**
+   * Sign flag
+   *
+   * @returns true if set, false otherwise
+   */
+  public get SF(): boolean {
+    return (this.F & 0b10000000) === 0b10000000
+  }
+
+  /**
+   * Sign flag
+   *
+   * @param value true to set, false to clear
+   */
+  public set SF(value: boolean) {
+    this.F = (value) ? (this.F | 0b10000000) : (this.F & ~0b10000000)
+  }
+
+  /**
+   * Zero flag
+   *
+   * @returns true if set, false otherwise
+   */
+  public get ZF(): boolean {
+    return (this.F & 0b01000000) === 0b01000000
+  }
+
+  /**
+   * Zero flag
+   *
+   * @param value true to set, false to clear
+   */
+  public set ZF(value: boolean) {
+    this.F = (value) ? (this.F | 0b01000000) : (this.F & ~0b01000000)
+  }
+
+  /**
+   * Auxiliary carry flag
+   *
+   * @returns true if set, false otherwise
+   */
+  public get AC(): boolean {
+    return (this.F & 0b00010000) === 0b00010000
+  }
+
+  /**
+   * Auxiliary carry flag
+   *
+   * @param value true to set, false to clear
+   */
+  public set AC(value: boolean) {
+    this.F = (value) ? (this.F | 0b00010000) : (this.F & ~0b00010000)
+  }
+
+  /**
+   * Parity flag
+   *
+   * @returns true if set, false otherwise
+   */
+  public get PF(): boolean {
+    return (this.F & 0b00000100) === 0b00000100
+  }
+
+  /**
+   * Parity flag
+   *
+   * @param value true to set, false to clear
+   */
+  public set PF(value: boolean) {
+    this.F = (value) ? (this.F | 0b00000100) : (this.F & ~0b00000100)
+  }
+
+  /**
+   * Carry flag
+   *
+   * @returns true if set, false otherwise
+   */
+  public get CY(): boolean {
+    return (this.F & 0b00000001) === 0b00000001
+  }
+
+  /**
+   * Carry flag
+   *
+   * @param value true to set, false to clear
+   */
+  public set CY(value: boolean) {
+    this.F = (value) ? (this.F | 0b00000001) : (this.F & ~0b00000001)
   }
 
   /**
