@@ -41,16 +41,9 @@ export class Processor {
   }
 
   /**
-   * Advances program counter to point where the next instruction will be in memory
-   */
-  private advance(offset: number) {
-    this.PC += offset
-  }
-
-  /**
    * Executes no operation
    */
-  public NOP() { this.advance(1) }
+  public NOP() { this.PC += 1 }
 
   /**
    * Loads register pair with immediate data
@@ -58,7 +51,7 @@ export class Processor {
   public LXI_BC_data() {
     this.B = this.BYTE3
     this.C = this.BYTE2
-    this.advance(3)
+    this.PC += 3
   }
 
   /**
@@ -66,7 +59,7 @@ export class Processor {
    */
   public STAX_BC() {
     this.memory.writeByte(this.BC, this.A)
-    this.advance(1)
+    this.PC += 1
   }
 
   /**
