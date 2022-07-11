@@ -30,7 +30,7 @@ export class Instruction {
   /**
    * @returns True if this instruction is ready to be executed
    */
-  public isReady(): boolean {
+  public get ready(): boolean {
     return this.cycle === this.cycles
   }
 }

@@ -32,7 +32,7 @@ export class Processor {
       this.instruction = Decoder.decode(this.OPCODE)
     }
 
-    if (this.instruction.isReady()) {
+    if (this.instruction.ready) {
       this.instruction.execute(this)
       this.instruction = null
     } else {
