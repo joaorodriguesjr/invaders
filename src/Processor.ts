@@ -72,6 +72,13 @@ export class Processor {
   }
 
   /**
+   * Increments register pair BC
+   */
+  public INX_BC() {
+    this.BC += 1
+  }
+
+  /**
    * General purpose register B
    *
    * @returns 8-bit wide value

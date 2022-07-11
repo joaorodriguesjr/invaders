@@ -62,4 +62,22 @@ describe('Processor', () => {
       expect(processor.PC).toBe(1)
     })
   })
+
+  describe('INX BC', () => {
+    const value = 0xAA0F
+
+    beforeEach(() => {
+      memory.writeByte(0x00, 0x03)
+      processor.BC = value
+      repeat(() => processor.clock(), 5)
+    })
+
+    it('Should increment register pair BC by 1', () => {
+      expect(processor.BC).toBe(value + 1)
+    })
+
+    it('Should increment program counter by 1', () => {
+      expect(processor.PC).toBe(1)
+    })
+  })
 })
