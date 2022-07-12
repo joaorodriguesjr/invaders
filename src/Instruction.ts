@@ -71,7 +71,7 @@ export function decode(opcode: number): Instruction {
 }
 
 /**
- * Provides the length a instruction based on its opcode
+ * Provides the length of a instruction based on its opcode
  *
  * @param opcode 8-bit opcode
  * @returns The length of the mapped instruction
