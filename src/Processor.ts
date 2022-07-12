@@ -2,7 +2,28 @@ import { Instruction, length, decode } from './Instruction'
 import { Memory } from './Memory'
 
 /**
- * Calculates the parity of a given value
+ * Checks a value for a zeroed condition
+ */
+function zeroed(value: number): boolean {
+  return value === 0
+}
+
+/**
+ * Checks a value for a signed condition
+ */
+function signed(value: number): boolean {
+  return (value & 0b10000000) === 0b10000000
+}
+
+/**
+ * Checks a value for a auxiliary carry condition
+ */
+function acarry(value: number): boolean {
+  return (value & 0b00001111) === 0b00001111
+}
+
+/**
+ * Checks a value for a parity condition
  */
 function parity(value: number): boolean {
   let count = 0
@@ -97,10 +118,10 @@ export class Processor {
    */
   public INR_B() {
     this.B += 1
-    this.ZF = (this.B === 0)
-    this.SF = (this.B & 0b10000000) === 0b10000000
+    this.ZF = zeroed(this.B)
+    this.SF = signed(this.B)
+    this.AC = acarry(this.B)
     this.PF = parity(this.B)
-    this.AC = false
   }
 
   /**
