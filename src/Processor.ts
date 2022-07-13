@@ -17,10 +17,14 @@ function signed(value: number): boolean {
 
 /**
  * Operation performed by the processor
- * - INC: Increment
- * - DEC: Decrement
  */
-enum OP { INC, DEC }
+enum OP {
+  /** Increment operation */
+  INC,
+
+  /** Decrement operation */
+  DEC,
+}
 
 /**
  * Checks a value for a auxiliary carry condition
