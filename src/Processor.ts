@@ -16,10 +16,22 @@ function signed(value: number): boolean {
 }
 
 /**
+ * Operation performed by the processor
+ * - INC: Increment
+ * - DEC: Decrement
+ */
+enum OP { INC, DEC }
+
+/**
  * Checks a value for a auxiliary carry condition
  */
-function acarry(value: number): boolean {
-  return (value & 0b00001111) === 0b00001111
+function acarry(value: number, operation: OP): boolean {
+  switch (operation) {
+    case OP.INC:
+      return (value & 0b00001111) === 0b00001111
+    case OP.DEC:
+      return (value & 0b00001111) === 0b00000000
+  }
 }
 
 /**
@@ -120,8 +132,19 @@ export class Processor {
     this.B += 1
     this.ZF = zeroed(this.B)
     this.SF = signed(this.B)
-    this.AC = acarry(this.B)
     this.PF = parity(this.B)
+    this.AC = acarry(this.B, OP.INC)
+  }
+
+  /**
+   * Decrements register B
+   */
+  public DCR_B() {
+    this.B -= 1
+    this.ZF = zeroed(this.B)
+    this.SF = signed(this.B)
+    this.PF = parity(this.B)
+    this.AC = acarry(this.B, OP.DEC)
   }
 
   /**
