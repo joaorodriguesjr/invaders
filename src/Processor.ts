@@ -2,6 +2,20 @@ import { Instruction, length, decode } from './Instruction'
 import { Memory } from './Memory'
 
 /**
+ * Sets a bit on a given byte
+ */
+function set(bit: number, byte: number): number {
+  return (byte | bit)
+}
+
+/**
+ * Clears a bit on a given byte
+ */
+function clear(bit: number, byte: number): number {
+  return (byte &~ bit)
+}
+
+/**
  * Checks a value for a zeroed condition
  */
 function zeroed(value: number): boolean {
@@ -461,7 +475,7 @@ export class Processor {
    * @param value true to set, false to clear
    */
   public set SF(value: boolean) {
-    this.F = (value) ? (this.F | 0b10000000) : (this.F & ~0b10000000)
+    this.F = (value) ? set(0b10000000, this.F) : clear(0b10000000, this.F)
   }
 
   /**
@@ -479,7 +493,7 @@ export class Processor {
    * @param value true to set, false to clear
    */
   public set ZF(value: boolean) {
-    this.F = (value) ? (this.F | 0b01000000) : (this.F & ~0b01000000)
+    this.F = (value) ? set(0b01000000, this.F) : clear(0b01000000, this.F)
   }
 
   /**
@@ -497,7 +511,7 @@ export class Processor {
    * @param value true to set, false to clear
    */
   public set AC(value: boolean) {
-    this.F = (value) ? (this.F | 0b00010000) : (this.F & ~0b00010000)
+    this.F = (value) ? set(0b00010000, this.F) : clear(0b00010000, this.F)
   }
 
   /**
@@ -515,7 +529,7 @@ export class Processor {
    * @param value true to set, false to clear
    */
   public set PF(value: boolean) {
-    this.F = (value) ? (this.F | 0b00000100) : (this.F & ~0b00000100)
+    this.F = (value) ? set(0b00000100, this.F) : clear(0b00000100, this.F)
   }
 
   /**
@@ -533,7 +547,7 @@ export class Processor {
    * @param value true to set, false to clear
    */
   public set CY(value: boolean) {
-    this.F = (value) ? (this.F | 0b00000001) : (this.F & ~0b00000001)
+    this.F = (value) ? set(0b00000001, this.F) : clear(0b00000001, this.F)
   }
 
   /**
