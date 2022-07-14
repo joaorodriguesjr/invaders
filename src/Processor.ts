@@ -38,6 +38,9 @@ enum OP {
 
   /** Decrement operation */
   DEC,
+
+  /** Shift left operation */
+  SHF_L,
 }
 
 /**
@@ -50,6 +53,20 @@ function acarry(value: number, operation: OP): boolean {
     case OP.DEC:
       return (value & 0b00001111) === 0b00000000
   }
+
+  return false
+}
+
+/**
+ * Checks a value for a carry condition
+ */
+function fcarry(value: number, operation: OP): boolean {
+  switch (operation) {
+    case OP.SHF_L:
+      return (value & 0b10000000) === 0b10000000
+  }
+
+  return false
 }
 
 /**
@@ -170,6 +187,15 @@ export class Processor {
    */
   public MVI_B_data() {
     this.B = this.Z
+  }
+
+  /**
+   * Rotates accumulator left
+   */
+  public RLC() {
+    const value = this.A
+    this.A  = (value << 1) | (value >> 7)
+    this.CY = fcarry(value, OP.SHF_L)
   }
 
   /**
