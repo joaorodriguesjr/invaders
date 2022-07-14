@@ -193,9 +193,9 @@ export class Processor {
    * Rotates accumulator left
    */
   public RLC() {
-    const value = this.A
-    this.A  = (value << 1) | (value >> 7)
-    this.CY = fcarry(value, OP.SHF_L)
+    const cache = this.A
+    this.A  = (cache << 1) | (cache >> 7)
+    this.CY = fcarry(cache, OP.SHF_L)
   }
 
   /**
