@@ -152,6 +152,13 @@ export class Processor {
   }
 
   /**
+   * Moves immediate data into register B
+   */
+  public MVI_B_data() {
+    this.B = this.Z
+  }
+
+  /**
    * General purpose register B
    *
    * @returns 8-bit wide value

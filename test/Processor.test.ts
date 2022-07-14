@@ -116,4 +116,20 @@ describe('Processor', () => {
       expect(processor.PC).toBe(1)
     })
   })
+
+  describe('MVI B,data', () => {
+    beforeEach(() => {
+      memory.writeByte(0x00, 0x06)
+      memory.writeByte(0x01, 0xFF)
+      repeat(() => processor.clock(), 7)
+    })
+
+    it('Should load register B with byte2 of the instruction', () => {
+      expect(processor.B).toBe(memory.readByte(0x01))
+    })
+
+    it('Should increment program counter by 2', () => {
+      expect(processor.PC).toBe(2)
+    })
+  })
 })
