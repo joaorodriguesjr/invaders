@@ -49,6 +49,7 @@ const instructions = [
   { length: 2, cycles: 7 , execute: (processor: Processor) => processor.MVI_B_data() },
   { length: 1, cycles: 4 , execute: (processor: Processor) => processor.RLC() },
   { length: 1, cycles: 4 , execute: (processor: Processor) => processor.NOP() },
+  { length: 1, cycles: 10, execute: (processor: Processor) => processor.DAD_BC() },
 ]
 
 /**

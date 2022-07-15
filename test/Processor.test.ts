@@ -148,4 +148,21 @@ describe('Processor', () => {
       expect(processor.CY).toBe(true)
     })
   })
+
+  describe('DAD BC', () => {
+    beforeEach(() => {
+      processor.HL = 0x0100
+      processor.BC = 0xFF00
+      memory.writeByte(0x00, 0x09)
+      repeat(() => processor.clock(), 10)
+    })
+
+    it('Should increment register pair HL with register pair BC', () => {
+      expect(processor.HL).toBe(0x0000)
+    })
+
+    it('Should set the flag when there is a carry', () => {
+      expect(processor.CY).toBe(true)
+    })
+  })
 })

@@ -33,6 +33,9 @@ function signed(value: number): boolean {
  * Operation performed by the processor
  */
 enum OP {
+  /** ADD operation */
+  ADD,
+
   /** Increment operation */
   INC,
 
@@ -62,6 +65,8 @@ function acarry(value: number, operation: OP): boolean {
  */
 function fcarry(value: number, operation: OP): boolean {
   switch (operation) {
+    case OP.ADD:
+      return (value > 0b11111111)
     case OP.SHF_L:
       return (value & 0b10000000) === 0b10000000
   }
@@ -196,6 +201,15 @@ export class Processor {
     const cache = this.A
     this.A  = (cache << 1) | (cache >> 7)
     this.CY = fcarry(cache, OP.SHF_L)
+  }
+
+  /**
+   * Adds register pair BC to register pair HL
+   */
+  public DAD_BC() {
+    const value = this.HL + this.BC
+    this.HL = value
+    this.CY = fcarry(value, OP.ADD)
   }
 
   /**
