@@ -149,6 +149,17 @@ describe('Processor', () => {
     })
   })
 
+  describe('NOP', () => {
+    beforeEach(() => {
+      memory.writeByte(0x00, 0x08)
+      repeat(() => processor.clock(), 4)
+    })
+
+    it('Should increment program counter by 1', () => {
+      expect(processor.PC).toBe(1)
+    })
+  })
+
   describe('DAD BC', () => {
     beforeEach(() => {
       processor.HL = 0x0100
