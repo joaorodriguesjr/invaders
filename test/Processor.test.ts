@@ -176,4 +176,21 @@ describe('Processor', () => {
       expect(processor.CY).toBe(true)
     })
   })
+
+  describe('LDAX BC', () => {
+    beforeEach(() => {
+      memory.writeByte(0x0000, 0x0A)
+      memory.writeByte(0xAAFF, 0xEE)
+      processor.BC = 0xAAFF
+      repeat(() => processor.clock(), 7)
+    })
+
+    it('Should load accumulator with a memory value pointed by register pair BC', () => {
+      expect(processor.A).toBe(memory.readByte(0xAAFF))
+    })
+
+    it('Should increment program counter by 1', () => {
+      expect(processor.PC).toBe(1)
+    })
+  })
 })

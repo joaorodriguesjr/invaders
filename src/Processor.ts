@@ -213,6 +213,13 @@ export class Processor {
   }
 
   /**
+   * Loads accumulator with memory value pointed by register pair BC
+   */
+  public LDAX_BC() {
+    this.A = this.memory.readByte(this.BC)
+  }
+
+  /**
    * General purpose register B
    *
    * @returns 8-bit wide value
