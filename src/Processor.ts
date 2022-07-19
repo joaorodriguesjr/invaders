@@ -220,6 +220,13 @@ export class Processor {
   }
 
   /**
+   * Decrements register pair BC
+   */
+  public DCX_BC() {
+    this.BC -= 1
+  }
+
+  /**
    * General purpose register B
    *
    * @returns 8-bit wide value
