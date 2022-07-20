@@ -229,4 +229,22 @@ describe('Processor', () => {
       expect(processor.PC).toBe(1)
     })
   })
+
+  describe('DCR C', () => {
+    const value = 0xAA
+
+    beforeEach(() => {
+      memory.writeByte(0x00, 0x0D)
+      processor.C = value
+      repeat(() => processor.clock(), 5)
+    })
+
+    it('Should decrement register C by 1', () => {
+      expect(processor.C).toBe(value - 1)
+    })
+
+    it('Should increment program counter by 1', () => {
+      expect(processor.PC).toBe(1)
+    })
+  })
 })
