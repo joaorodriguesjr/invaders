@@ -227,6 +227,17 @@ export class Processor {
   }
 
   /**
+   * Increments register C
+   */
+   public INR_C() {
+    this.C += 1
+    this.ZF = zeroed(this.C)
+    this.SF = signed(this.C)
+    this.PF = parity(this.C)
+    this.AC = acarry(this.C, OP.INC)
+  }
+
+  /**
    * General purpose register B
    *
    * @returns 8-bit wide value

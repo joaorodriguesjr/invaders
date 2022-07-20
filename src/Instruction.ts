@@ -52,6 +52,7 @@ const instructions = [
   { length: 1, cycles: 10, execute: (processor: Processor) => processor.DAD_BC() },
   { length: 1, cycles: 7 , execute: (processor: Processor) => processor.LDAX_BC() },
   { length: 1, cycles: 5 , execute: (processor: Processor) => processor.DCX_BC() },
+  { length: 1, cycles: 5 , execute: (processor: Processor) => processor.INR_C() },
 ]
 
 /**

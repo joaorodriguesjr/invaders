@@ -211,4 +211,22 @@ describe('Processor', () => {
       expect(processor.PC).toBe(1)
     })
   })
+
+  describe('INR C', () => {
+    const value = 0xAA
+
+    beforeEach(() => {
+      memory.writeByte(0x00, 0x0C)
+      processor.C = value
+      repeat(() => processor.clock(), 5)
+    })
+
+    it('Should increment register C by 1', () => {
+      expect(processor.C).toBe(value + 1)
+    })
+
+    it('Should increment program counter by 1', () => {
+      expect(processor.PC).toBe(1)
+    })
+  })
 })
