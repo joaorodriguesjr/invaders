@@ -263,4 +263,20 @@ describe('Processor', () => {
       expect(processor.PC).toBe(2)
     })
   })
+
+  describe('RRC', () => {
+    beforeEach(() => {
+      processor.A = 0b10101010
+      memory.writeByte(0x00, 0x0F)
+      repeat(() => processor.clock(), 4)
+    })
+
+    it('Should shift accumulator register right', () => {
+      expect(processor.A).toBe(0b01010101)
+    })
+
+    it('Should set the flag when there is a carry', () => {
+      expect(processor.CY).toBe(true)
+    })
+  })
 })

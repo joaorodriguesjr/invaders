@@ -44,6 +44,9 @@ enum OP {
 
   /** Shift left operation */
   SHF_L,
+
+  /** Shift Right operation */
+  SHF_R,
 }
 
 /**
@@ -69,6 +72,8 @@ function fcarry(value: number, operation: OP): boolean {
       return (value > 0b11111111)
     case OP.SHF_L:
       return (value & 0b10000000) === 0b10000000
+    case OP.SHF_R:
+      return (value & 0b00000001) === 0b00000001
   }
 
   return false
@@ -253,6 +258,15 @@ export class Processor {
    */
   public MVI_C_data() {
     this.C = this.Z
+  }
+
+  /**
+   * Rotates accumulator right
+   */
+  public RRC() {
+    const cache = this.A
+    this.A  = (cache >> 1) | (cache << 7)
+    this.CY = fcarry(this.A, OP.SHF_R)
   }
 
   /**
