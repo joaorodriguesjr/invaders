@@ -279,4 +279,15 @@ describe('Processor', () => {
       expect(processor.CY).toBe(true)
     })
   })
+
+  describe('NOP', () => {
+    beforeEach(() => {
+      memory.writeByte(0x00, 0x10)
+      repeat(() => processor.clock(), 4)
+    })
+
+    it('Should increment program counter by 1', () => {
+      expect(processor.PC).toBe(1)
+    })
+  })
 })

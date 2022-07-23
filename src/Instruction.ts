@@ -56,6 +56,7 @@ const instructions = [
   { length: 1, cycles: 5 , execute: (processor: Processor) => processor.DCR_C() },
   { length: 2, cycles: 7 , execute: (processor: Processor) => processor.MVI_C_data() },
   { length: 1, cycles: 4 , execute: (processor: Processor) => processor.RRC() },
+  { length: 1, cycles: 4 , execute: (processor: Processor) => processor.NOP() },
 ]
 
 /**
