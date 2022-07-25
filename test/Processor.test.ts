@@ -290,4 +290,25 @@ describe('Processor', () => {
       expect(processor.PC).toBe(1)
     })
   })
+
+  describe('LXI DE,data', () => {
+    beforeEach(() => {
+      memory.writeByte(0x00, 0x11)
+      memory.writeByte(0x01, 0xFF)
+      memory.writeByte(0x02, 0xAA)
+      repeat(() => processor.clock(), 10)
+    })
+
+    it('Should load register D with byte3 of the instruction', () => {
+      expect(processor.D).toBe(memory.readByte(0x02))
+    })
+
+    it('Should load register E with byte2 of the instruction', () => {
+      expect(processor.E).toBe(memory.readByte(0x01))
+    })
+
+    it('Should increment program counter by 3', () => {
+      expect(processor.PC).toBe(3)
+    })
+  })
 })

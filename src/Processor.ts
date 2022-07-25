@@ -149,7 +149,7 @@ export class Processor {
   public NOP() { }
 
   /**
-   * Loads register pair with immediate data
+   * Loads register pair BC with immediate data
    */
   public LXI_BC_data() {
     this.B = this.W
@@ -267,6 +267,14 @@ export class Processor {
     const cache = this.A
     this.A  = (cache >> 1) | (cache << 7)
     this.CY = fcarry(this.A, OP.SHF_R)
+  }
+
+  /**
+   * Loads register pair DE with immediate data
+   */
+  public LXI_DE_data() {
+    this.D = this.W
+    this.E = this.Z
   }
 
   /**
