@@ -278,6 +278,13 @@ export class Processor {
   }
 
   /**
+   * Stores accumulator into memory address pointed by register pair DE
+   */
+  public STAX_DE() {
+    this.memory.writeByte(this.DE, this.A)
+  }
+
+  /**
    * General purpose register B
    *
    * @returns 8-bit wide value

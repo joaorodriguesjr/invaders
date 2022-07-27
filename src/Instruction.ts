@@ -58,6 +58,7 @@ const instructions = [
   { length: 1, cycles: 4 , execute: (processor: Processor) => processor.RRC() },
   { length: 1, cycles: 4 , execute: (processor: Processor) => processor.NOP() },
   { length: 3, cycles: 10, execute: (processor: Processor) => processor.LXI_DE_data() },
+  { length: 1, cycles: 7 , execute: (processor: Processor) => processor.STAX_DE() },
 ]
 
 /**
